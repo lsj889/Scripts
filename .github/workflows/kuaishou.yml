@@ -1,10 +1,11 @@
- 
-name: 快手视频签到
- 
+# 快手视频刷金币测试，抓包获取secrets
+
+name: 快手视频浏览
+
 on:
   workflow_dispatch:
   schedule:
-     - cron: '15 19 * * *'
+     - cron: '*/30 0,2,4,6,8,10,12 * * *'
   watch:
     types: started
 jobs:
@@ -12,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
-        KS_TOKEN: ${{ secrets.KS_TOKEN }}
+        KUAISHOUMV: ${{ secrets.KUAISHOUMV }}
+        TZ: Asia/shanghai
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,16 +25,15 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: 运行 【快手视频签到】
-        if: env.KS_TOKEN
+      - name: '运行 【快手视频】'
+        if: env.KUAISHOUMV
         run: |
-          node Task/kuaishou.js
+          node Task/Auto_Kuaishou.js
         env:
-          PUSH_KEY: ${{ secrets.PUSH_KEY || github.event.client_payload.PUSH_KEY }}
-          BARK_PUSH: ${{ secrets.BARK_PUSH || github.event.client_payload.BARK_PUSH }}
-          BARK_SOUND: ${{ secrets.BARK_SOUND || github.event.client_payload.BARK_SOUND }}
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN || github.event.client_payload.TG_BOT_TOKEN }}
-          TG_USER_ID: ${{ secrets.TG_USER_ID || github.event.client_payload.TG_USER_ID }}
-          DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN || github.event.client_payload.DD_BOT_TOKEN }}
-          DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET || github.event.client_payload.DD_BOT_SECRET }}
-          IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY || github.event.client_payload.IGOT_PUSH_KEY }}
+          PUSH_KEY: ${{ secrets.PUSH_KEY }}
+          BARK_PUSH: ${{ secrets.BARK_PUSH }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+          BARK_SOUND: ${{ secrets.BARK_SOUND }}
+          DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+          DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
